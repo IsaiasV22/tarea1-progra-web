@@ -1,0 +1,234 @@
+/* =========================================
+   CS Books - Stylesheet
+   Inspired by books-nuxtjs.netlify.app
+   ========================================= */
+
+:root {
+    --color-bg: #dedede;
+    --color-surface: #ffffff;
+    --color-midnight: #191970;
+    --color-midnight-light: #2a2a8f;
+    --color-text: #202228;
+    --color-text-muted: #424752;
+    --color-border: #c7c8cc;
+    --color-link: #0f6fa8;
+    --color-tag-bg: #eceef7;
+    --color-tag-text: #2e3277;
+    --font-display: 'Source Sans 3', sans-serif;
+    --font-body: 'Source Sans 3', sans-serif;
+    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-hover: 0 6px 18px rgba(0, 0, 0, 0.16);
+    --radius: 10px;
+    --transition: 0.25s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ---- NAVBAR ---- */
+.navbar {
+    padding: 1.2rem 0.95rem 0;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 3.8%;
+    width: 100%;
+}
+
+.nav-links li {
+    width: 23%;
+}
+
+.nav-links a {
+    display: block;
+    width: 100%;
+    background: var(--color-midnight);
+    color: #ffffff;
+    text-decoration: none;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    padding: 0.9rem 1rem;
+    border-radius: 6px;
+}
+
+.nav-links a.active {
+    background: var(--color-midnight-light);
+}
+
+/* ---- MAIN ---- */
+.main-content {
+    flex: 1;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 2.2rem 0.95rem 1.6rem;
+    width: 100%;
+}
+
+/* ---- HOME ---- */
+.home-intro h1 {
+    font-size: clamp(3rem, 6vw, 4.4rem);
+    font-weight: 600;
+    margin-bottom: 1.8rem;
+    color: var(--color-text);
+}
+
+.home-intro p {
+    font-size: clamp(1.35rem, 2.2vw, 2rem);
+    max-width: 1200px;
+    margin-bottom: 2.3rem;
+    color: var(--color-text);
+}
+
+.home-links {
+    list-style: circle;
+    margin-left: 2rem;
+}
+
+.home-links li {
+    margin-bottom: 1rem;
+    font-size: clamp(1.45rem, 2.1vw, 2rem);
+}
+
+.home-links a {
+    color: var(--color-link);
+}
+
+/* ---- PAGE HEADER ---- */
+.page-header {
+    margin-bottom: 2.5rem;
+}
+
+.page-header h2 {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    color: var(--color-midnight);
+    margin-bottom: 0.3rem;
+}
+
+.page-header p {
+    color: var(--color-text-muted);
+    font-size: 0.97rem;
+}
+
+/* ---- INDEX LIST ---- */
+.category-list {
+    list-style: circle;
+    margin-left: 2rem;
+}
+
+.category-list li {
+    margin-bottom: 1rem;
+    font-size: clamp(1.45rem, 2.1vw, 2rem);
+}
+
+.category-list a {
+    color: var(--color-link);
+}
+
+/* ---- DETAIL ---- */
+.entity-detail {
+    max-width: 980px;
+}
+
+.entity-detail h1 {
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+    line-height: 1.2;
+}
+
+.entity-meta {
+    font-size: clamp(1.15rem, 2.2vw, 2.75rem);
+    margin-bottom: 2.2rem;
+    line-height: 1.5;
+}
+
+.entity-meta a,
+.entity-detail a {
+    color: var(--color-link);
+}
+
+.entity-detail h2 {
+    font-size: clamp(2rem, 3.4vw, 3rem);
+    font-weight: 600;
+    margin: 2rem 0 1rem;
+    line-height: 1.25;
+}
+
+/* ---- FOOTER ---- */
+.footer {
+    background: var(--color-midnight);
+    color: #ffffff;
+    text-align: center;
+    padding: 1rem 2rem;
+    margin: 0.5rem 0.95rem 1rem;
+    font-size: 2rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border-radius: 7px;
+}
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0.8rem 0.75rem 0;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        gap: 0.65rem;
+    }
+
+    .nav-links li {
+        width: calc(50% - 0.33rem);
+    }
+
+    .main-content {
+        padding: 1.5rem 0.75rem 1rem;
+    }
+
+    .home-intro h1 {
+        margin-bottom: 1.2rem;
+    }
+
+    .home-intro p {
+        margin-bottom: 1.4rem;
+    }
+
+    .home-links {
+        margin-left: 1.45rem;
+    }
+
+    .footer {
+        margin: 0.5rem 0.75rem 0.75rem;
+        font-size: clamp(1rem, 3.2vw, 1.35rem);
+    }
+
+    .entity-meta {
+        font-size: 1.95rem;
+    }
+
+}
