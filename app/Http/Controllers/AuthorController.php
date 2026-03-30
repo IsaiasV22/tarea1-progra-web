@@ -2,50 +2,62 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Author;
 use Illuminate\Http\Request;
 
 class AuthorController extends Controller
 {
-    private function getAuthors(): array
+    public function create()
     {
-        return [
-            [
-                'id'          => 1,
-                'name'        => 'Abraham Silberschatz',
-                'nationality' => 'Israeli / American',
-                'birth_year'  => 1952,
-                'fields'      => 'Database Systems, Operating Systems',
-                'books'       => [
-                    ['id' => 1, 'title' => 'Operating System Concepts'],
-                    ['id' => 2, 'title' => 'Database System Concepts'],
-                ],
-            ],
-            [
-                'id'          => 2,
-                'name'        => 'Andrew S. Tanenbaum',
-                'nationality' => 'Dutch / American',
-                'birth_year'  => 1944,
-                'fields'      => 'Distributed Computing, Operating Systems',
-                'books'       => [
-                    ['id' => 3, 'title' => 'Computer Networks'],
-                    ['id' => 4, 'title' => 'Modern Operating Systems'],
-                ],
-            ],
-        ];
+        return view('authors.create');
+    }
+
+    public function store(Request $request)
+    {
+        $author = Author::query()->create($request->only([
+            'name',
+            'nationality',
+            'birth_year',
+            'fields',
+        ]));
+
+        return redirect()->route('authors.show', $author->id);
     }
 
     public function index()
     {
-        $authors = $this->getAuthors();
+        $authors = Author::query()->orderBy('name')->get();
+
         return view('authors.index', compact('authors'));
+    }
+
+    public function edit(int $id)
+    {
+        $author = Author::query()->findOrFail($id);
+
+        return view('authors.edit', compact('author'));
+    }
+
+    public function update(int $id, Request $request)
+    {
+        $author = Author::query()->findOrFail($id);
+
+        $author->update($request->only([
+            'name',
+            'nationality',
+            'birth_year',
+            'fields',
+        ]));
+
+        return redirect()->route('authors.show', $author->id);
     }
 
     public function show(int $id)
     {
-        $author = collect($this->getAuthors())->firstWhere('id', $id);
-        if (!$author) {
-            abort(404, 'Author not found.');
-        }
+        $author = Author::query()
+            ->with('books')
+            ->findOrFail($id);
+
         return view('authors.show', compact('author'));
     }
 }

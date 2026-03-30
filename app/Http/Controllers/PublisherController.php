@@ -2,50 +2,62 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Publisher;
 use Illuminate\Http\Request;
 
 class PublisherController extends Controller
 {
-    private function getPublishers(): array
+    public function create()
     {
-        return [
-            [
-                'id'      => 1,
-                'name'    => 'John Wiley & Sons',
-                'country' => 'United States',
-                'founded' => 1807,
-                'genere'  => 'Academic',
-                'books'   => [
-                    ['id' => 1, 'title' => 'Operating System Concepts'],
-                    ['id' => 2, 'title' => 'Database System Concepts'],
-                ],
-            ],
-            [
-                'id'      => 2,
-                'name'    => 'Pearson Education',
-                'country' => 'United Kingdom',
-                'founded' => 1844,
-                'genere'  => 'Education',
-                'books'   => [
-                    ['id' => 3, 'title' => 'Computer Networks'],
-                    ['id' => 4, 'title' => 'Modern Operating Systems'],
-                ],
-            ],
-        ];
+        return view('publishers.create');
+    }
+
+    public function store(Request $request)
+    {
+        $publisher = Publisher::query()->create($request->only([
+            'name',
+            'country',
+            'founded',
+            'genre',
+        ]));
+
+        return redirect()->route('publishers.show', $publisher->id);
     }
 
     public function index()
     {
-        $publishers = $this->getPublishers();
+        $publishers = Publisher::query()->orderBy('name')->get();
+
         return view('publishers.index', compact('publishers'));
+    }
+
+    public function edit(int $id)
+    {
+        $publisher = Publisher::query()->findOrFail($id);
+
+        return view('publishers.edit', compact('publisher'));
+    }
+
+    public function update(int $id, Request $request)
+    {
+        $publisher = Publisher::query()->findOrFail($id);
+
+        $publisher->update($request->only([
+            'name',
+            'country',
+            'founded',
+            'genre',
+        ]));
+
+        return redirect()->route('publishers.show', $publisher->id);
     }
 
     public function show(int $id)
     {
-        $publisher = collect($this->getPublishers())->firstWhere('id', $id);
-        if (!$publisher) {
-            abort(404, 'Publisher not found.');
-        }
+        $publisher = Publisher::query()
+            ->with('books')
+            ->findOrFail($id);
+
         return view('publishers.show', compact('publisher'));
     }
 }
