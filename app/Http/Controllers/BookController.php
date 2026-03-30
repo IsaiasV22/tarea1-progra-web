@@ -2,76 +2,75 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Author;
+use App\Models\Book;
+use App\Models\Publisher;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
-    private function getBooks(): array
+    public function create()
     {
-        return [
-            [
-                'id'           => 1,
-                'title'        => 'Operating System Concepts',
-                'edition'      => '9th',
-                'copyright'    => 2012,
-                'language'     => 'ENGLISH',
-                'pages'        => 976,
-                'author'       => 'Abraham Silberschatz',
-                'author_id'    => 1,
-                'publisher'    => 'John Wiley & Sons',
-                'publisher_id' => 1,
-            ],
-            [
-                'id'           => 2,
-                'title'        => 'Database System Concepts',
-                'edition'      => '6th',
-                'copyright'    => 2010,
-                'language'     => 'ENGLISH',
-                'pages'        => 1376,
-                'author'       => 'Abraham Silberschatz',
-                'author_id'    => 1,
-                'publisher'    => 'John Wiley & Sons',
-                'publisher_id' => 1,
-            ],
-            [
-                'id'           => 3,
-                'title'        => 'Computer Networks',
-                'edition'      => '5th',
-                'copyright'    => 2010,
-                'language'     => 'ENGLISH',
-                'pages'        => 960,
-                'author'       => 'Andrew S. Tanenbaum',
-                'author_id'    => 2,
-                'publisher'    => 'Pearson Education',
-                'publisher_id' => 2,
-            ],
-            [
-                'id'           => 4,
-                'title'        => 'Modern Operating Systems',
-                'edition'      => '4th',
-                'copyright'    => 2014,
-                'language'     => 'ENGLISH',
-                'pages'        => 1136,
-                'author'       => 'Andrew S. Tanenbaum',
-                'author_id'    => 2,
-                'publisher'    => 'Pearson Education',
-                'publisher_id' => 2,
-            ],
-        ];
+        $authors = Author::query()->orderBy('name')->get();
+        $publishers = Publisher::query()->orderBy('name')->get();
+
+        return view('books.create', compact('authors', 'publishers'));
+    }
+
+    public function store(Request $request)
+    {
+        $book = Book::query()->create($request->only([
+            'title',
+            'edition',
+            'copyright',
+            'language',
+            'pages',
+            'author_id',
+            'publisher_id',
+        ]));
+
+        return redirect()->route('books.show', $book->id);
     }
 
     public function index()
     {
-        $books = $this->getBooks();
+        $books = Book::query()->orderBy('title')->get();
+
         return view('books.index', compact('books'));
+    }
+
+    public function edit(int $id)
+    {
+        $book = Book::query()->findOrFail($id);
+        $authors = Author::query()->orderBy('name')->get();
+        $publishers = Publisher::query()->orderBy('name')->get();
+
+        return view('books.edit', compact('book', 'authors', 'publishers'));
+    }
+
+    public function update(int $id, Request $request)
+    {
+        $book = Book::query()->findOrFail($id);
+
+        $book->update($request->only([
+            'title',
+            'edition',
+            'copyright',
+            'language',
+            'pages',
+            'author_id',
+            'publisher_id',
+        ]));
+
+        return redirect()->route('books.show', $book->id);
     }
 
     public function show(int $id)
     {
-        $book = collect($this->getBooks())->firstWhere('id', $id);
-        if (!$book) {
-            abort(404, 'Book not found.');
-        }
+        $book = Book::query()
+            ->with(['author', 'publisher'])
+            ->findOrFail($id);
+
         return view('books.show', compact('book'));
     }
 }
